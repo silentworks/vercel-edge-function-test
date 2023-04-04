@@ -1,24 +1,26 @@
 import {
   useSessionContext,
   useSupabaseClient,
-  useUser
-} from '@supabase/auth-helpers-react';
-import { Auth, ThemeSupa } from '@supabase/auth-ui-react';
-import type { NextPage } from 'next';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { Database } from '../db_types';
+  useUser,
+} from "@supabase/auth-helpers-react";
+import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
+import type { NextPage } from "next";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Database } from "../db_types";
+
+type UserType = Database["public"]["Tables"]["users"]["Row"];
 
 const LoginPage: NextPage = () => {
   const { isLoading, session, error } = useSessionContext();
   const user = useUser();
   const supabaseClient = useSupabaseClient<Database>();
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<UserType | null>(null);
 
   useEffect(() => {
     async function loadData() {
-      const { data } = await supabaseClient.from('users').select('*').single();
+      const { data } = await supabaseClient.from("users").select("*").single();
       setData(data);
     }
 
@@ -33,8 +35,8 @@ const LoginPage: NextPage = () => {
         <button
           onClick={() => {
             supabaseClient.auth.signInWithOAuth({
-              provider: 'github',
-              options: { scopes: 'repo', redirectTo: 'http://localhost:3000' }
+              provider: "github",
+              options: { scopes: "repo", redirectTo: "http://localhost:3000" },
             });
           }}
         >
@@ -45,7 +47,7 @@ const LoginPage: NextPage = () => {
           appearance={{ theme: ThemeSupa }}
           // view="update_password"
           supabaseClient={supabaseClient}
-          providers={['google', 'github']}
+          providers={["google", "github"]}
           // scopes={{github: 'repo'}} // TODO: enable scopes in Auth component.
           socialLayout="horizontal"
         />
@@ -56,10 +58,10 @@ const LoginPage: NextPage = () => {
     <>
       <p>
         [<Link href="/profile">getServerSideProps</Link>] | [
-        <Link href="/protected-page">server-side RLS</Link>] |{' '}
+        <Link href="/protected-page">server-side RLS</Link>] |{" "}
         <button
           onClick={() =>
-            supabaseClient.auth.updateUser({ data: { test1: 'updated' } })
+            supabaseClient.auth.updateUser({ data: { test1: "updated" } })
           }
         >
           Update user metadata
