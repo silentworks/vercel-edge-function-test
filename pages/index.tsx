@@ -43,7 +43,6 @@ const LoginPage: NextPage = () => {
           Login with github
         </button>
         <Auth
-          redirectTo="http://localhost:3000"
           appearance={{ theme: ThemeSupa }}
           // view="update_password"
           supabaseClient={supabaseClient}
