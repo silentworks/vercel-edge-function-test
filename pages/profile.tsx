@@ -1,10 +1,14 @@
 // pages/profile.js
 import {
   createServerSupabaseClient,
-  User
-} from '@supabase/auth-helpers-nextjs';
-import { GetServerSidePropsContext } from 'next';
-import Link from 'next/link';
+  User,
+} from "@supabase/auth-helpers-nextjs";
+import { GetServerSidePropsContext } from "next";
+import Link from "next/link";
+
+export const config = {
+  runtime: "edge",
+};
 
 export default function Profile({ user }: { user: User }) {
   return (
@@ -24,21 +28,21 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const supabase = createServerSupabaseClient(ctx);
   // Check if we have a session
   const {
-    data: { session }
+    data: { session },
   } = await supabase.auth.getSession();
 
   if (!session)
     return {
       redirect: {
-        destination: '/',
-        permanent: false
-      }
+        destination: "/",
+        permanent: false,
+      },
     };
 
   return {
     props: {
       initialSession: session,
-      user: session.user
-    }
+      user: session.user,
+    },
   };
 };

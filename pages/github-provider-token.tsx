@@ -1,14 +1,18 @@
 // pages/protected-page.js
 import {
   User,
-  createServerSupabaseClient
-} from '@supabase/auth-helpers-nextjs';
-import { GetServerSidePropsContext } from 'next';
-import Link from 'next/link';
+  createServerSupabaseClient,
+} from "@supabase/auth-helpers-nextjs";
+import { GetServerSidePropsContext } from "next";
+import Link from "next/link";
+
+export const config = {
+  runtime: "edge",
+};
 
 export default function ProtectedPage({
   user,
-  allRepos
+  allRepos,
 }: {
   user: User;
   allRepos: any;
@@ -33,15 +37,15 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const supabase = createServerSupabaseClient(ctx);
   // Check if we have a session
   const {
-    data: { session }
+    data: { session },
   } = await supabase.auth.getSession();
 
   if (!session)
     return {
       redirect: {
-        destination: '/',
-        permanent: false
-      }
+        destination: "/",
+        permanent: false,
+      },
     };
 
   // Retrieve provider_token & logged in user's third-party id from metadata
@@ -50,10 +54,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   const allRepos = await (
     await fetch(`https://api.github.com/search/repositories?q=user:${userId}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        Authorization: `token ${provider_token}`
-      }
+        Authorization: `token ${provider_token}`,
+      },
     })
   ).json();
 
