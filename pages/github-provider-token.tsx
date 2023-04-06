@@ -7,7 +7,7 @@ import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 
 export const config = {
-  runtime: "edge",
+  runtime: "experimental-edge",
 };
 
 export default function ProtectedPage({
